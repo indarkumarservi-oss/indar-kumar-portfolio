@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#0a0f1a"/>
+  <rect x="0" y="0" width="1200" height="630" fill="url(#grid)"/>
+  <defs>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#1e2a3a" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+  <circle cx="600" cy="315" r="150" stroke="#06b6d4" stroke-width="3" fill="none" opacity="0.3"/>
+  <circle cx="600" cy="315" r="100" fill="#06b6d4" opacity="0.1"/>
+  <text x="600" y="280" font-family="system-ui, sans-serif" font-size="48" font-weight="700" fill="white" text-anchor="middle">Indar Kumar</text>
+  <text x="600" y="340" font-family="system-ui, sans-serif" font-size="24" fill="#06b6d4" text-anchor="middle">Computer Science & Data Science</text>
+  <text x="600" y="380" font-family="system-ui, sans-serif" font-size="18" fill="#94a3b8" text-anchor="middle">Developer • AI Enthusiast • Builder</text>
+  <text x="600" y="520" font-family="system-ui, sans-serif" font-size="14" fill="#64748b" text-anchor="middle">indarkumarservi@gmail.com</text>
+</svg>
