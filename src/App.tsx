@@ -18,6 +18,7 @@ import { BootScreen } from "@/components/sections/BootScreen"
 import { CustomCursor } from "@/components/ui/CustomCursor"
 import { CommandPalette } from "@/components/ui/CommandPalette"
 import { Terminal } from "@/components/ui/Terminal"
+import { GlobalBackground } from "@/components/ui/GlobalBackground"
 import { TooltipProvider } from "@/components/ui/Tooltip"
 import { useReducedMotion } from "@/hooks"
 import { useState } from "react"
@@ -29,7 +30,9 @@ export default function App() {
   return (
     <ThemeProvider>
       <TooltipProvider>
-        <div className="min-h-screen bg-background text-foreground">
+        <GlobalBackground className="fixed inset-0 -z-10" aria-hidden="true" />
+        <div className="vignette-strong" aria-hidden="true" />
+        <div className="min-h-screen bg-background/40 text-foreground relative z-0">
           {!bootComplete && (
             <BootScreen onComplete={() => setBootComplete(true)} reducedMotion={reducedMotion} />
           )}

@@ -117,6 +117,16 @@
   .section-subheading {
     @apply text-lg sm:text-xl text-muted-foreground max-w-2xl;
   }
+
+  .vignette {
+    @apply fixed inset-0 pointer-events-none -z-10;
+    background: radial-gradient(ellipse at center, transparent 40%, hsl(var(--background)) 100%);
+  }
+
+  .vignette-strong {
+    @apply fixed inset-0 pointer-events-none -z-10;
+    background: radial-gradient(ellipse at center, transparent 20%, hsl(var(--background) / 0.9) 70%, hsl(var(--background)) 100%);
+  }
 }
 
 @layer utilities {

@@ -14,7 +14,8 @@ export function Hero() {
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <ThreeBackground className="absolute inset-0" aria-hidden="true" />
 
-      <div className="absolute inset-0 grid-bg opacity-20 animate-[gridMove_20s_linear_infinite]" aria-hidden="true" />
+      {/* Subtle dark overlay for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/70 to-background/50" aria-hidden="true" />
 
       <div className="relative section-container py-20">
         <motion.div
