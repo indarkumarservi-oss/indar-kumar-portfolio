@@ -32,3 +32,5 @@ export {
 } from "./Dialog"
 export { CustomCursor } from "./CustomCursor"
 export { CommandPalette } from "./CommandPalette"
+export { Terminal } from "./Terminal"
+export { ThreeBackground } from "./ThreeBackground"

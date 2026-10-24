@@ -11,11 +11,13 @@ import { Certifications } from "@/components/sections/Certifications"
 import { Experience } from "@/components/sections/Experience"
 import { WhatIBuild } from "@/components/sections/WhatIBuild"
 import { GitHub } from "@/components/sections/GitHub"
+import { Blog } from "@/components/sections/Blog"
 import { Contact } from "@/components/sections/Contact"
 import { Footer } from "@/components/sections/Footer"
 import { BootScreen } from "@/components/sections/BootScreen"
 import { CustomCursor } from "@/components/ui/CustomCursor"
 import { CommandPalette } from "@/components/ui/CommandPalette"
+import { Terminal } from "@/components/ui/Terminal"
 import { TooltipProvider } from "@/components/ui/Tooltip"
 import { useReducedMotion } from "@/hooks"
 import { useState } from "react"
@@ -45,11 +47,13 @@ export default function App() {
                 <Experience />
                 <WhatIBuild />
                 <GitHub />
+                <Blog />
                 <Contact />
                 <Footer />
               </main>
               <CustomCursor />
               <CommandPalette />
+              <Terminal initiallyOpen={false} />
             </>
           )}
         </div>

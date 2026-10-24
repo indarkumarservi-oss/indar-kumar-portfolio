@@ -1,12 +1,14 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { portfolioConfig } from "@/config/portfolio"
 import { Card } from "@/components/ui"
 import { Badge } from "@/components/ui"
+import { Button } from "@/components/ui"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui"
-import { Github, ExternalLink, ArrowRight, Code, Server, Database, Bot, Layers, Globe, Sparkles, Shield } from "lucide-react"
+import { Github, ExternalLink, ArrowRight, Code, Server, Database, Bot, Layers, Globe, Sparkles, Shield, Filter, X } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 const techIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   Python: Code,
@@ -32,10 +34,60 @@ const techIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   "RTOS Concepts": Server,
   "Embedded Systems": Server,
   "Kernel Development": Server,
+  "Tailwind CSS": Code,
+  "Dexie.js": Database,
+  "IndexedDB": Database,
+  Capacitor: Server,
+  "html5-qrcode": Code,
+  "Lucide React": Code,
+  Vite: Code,
+  PWA: Globe,
+  "Node.js": Server,
+  Express: Server,
+  MongoDB: Database,
+  "Socket.io": Globe,
+  Mongoose: Database,
+  JWT: Shield,
+  Nodemailer: Globe,
+  Twilio: Globe,
+  "Chart.js": Database,
+}
+
+function getAllTechnologies() {
+  const techSet = new Set<string>()
+  portfolioConfig.projects.items.forEach(project => {
+    project.technologies.forEach(tech => techSet.add(tech))
+  })
+  return Array.from(techSet).sort()
 }
 
 export function Projects() {
+  const allTechnologies = getAllTechnologies()
   const [selectedProject, setSelectedProject] = useState<typeof portfolioConfig.projects.items[0] | null>(null)
+  const [selectedTech, setSelectedTech] = useState<string>("all")
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const filteredProjects = useMemo(() => {
+    return portfolioConfig.projects.items.filter(project => {
+      const matchesTech = selectedTech === "all" || project.technologies.includes(selectedTech)
+      const matchesSearch = searchQuery === "" || 
+        project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        project.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        project.technologies.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()))
+      return matchesTech && matchesSearch
+    })
+  }, [selectedTech, searchQuery])
+
+  const handleTechFilter = (tech: string) => {
+    setSelectedTech(tech === selectedTech ? "all" : tech)
+  }
+
+  const clearFilters = () => {
+    setSelectedTech("all")
+    setSearchQuery("")
+  }
+
+  const hasActiveFilters = selectedTech !== "all" || searchQuery !== ""
 
   return (
     <section id="projects" className="py-20 sm:py-28 lg:py-32">
@@ -45,7 +97,7 @@ export function Projects() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto text-center mb-16"
+          className="max-w-3xl mx-auto text-center mb-12"
         >
           <span className="font-mono text-xs text-primary uppercase tracking-wider">Featured Projects</span>
           <h2 className="mt-4 section-heading">Systems I've Engineered</h2>
@@ -55,20 +107,109 @@ export function Projects() {
         </motion.div>
 
         <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mb-10"
+        >
+          <div className="space-y-4">
+            <div className="relative max-w-xl mx-auto">
+              <Filter className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search projects..."
+                className="w-full pl-12 pr-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors"
+              />
+            </div>
+            
+            <div className="flex flex-wrap gap-2 justify-center">
+              <button
+                onClick={() => handleTechFilter("all")}
+                className={cn(
+                  "px-3 py-1.5 text-sm font-medium rounded-full transition-all",
+                  selectedTech === "all"
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                )}
+              >
+                All
+              </button>
+              {allTechnologies.slice(0, 12).map((tech) => (
+                <button
+                  key={tech}
+                  onClick={() => handleTechFilter(tech)}
+                  className={cn(
+                    "px-3 py-1.5 text-sm font-medium rounded-full transition-all",
+                    selectedTech === tech
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                  )}
+                >
+                  {tech}
+                </button>
+              ))}
+              {allTechnologies.length > 12 && (
+                <span className="px-3 py-1.5 text-sm text-muted-foreground flex items-center">
+                  +{allTechnologies.length - 12} more
+                </span>
+              )}
+            </div>
+          </div>
+
+          {hasActiveFilters && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mt-4 flex items-center justify-center gap-2"
+            >
+              <span className="text-sm text-muted-foreground">Filtering by:</span>
+              {selectedTech !== "all" && (
+                <Badge variant="outline" size="sm" className="gap-1">
+                  {selectedTech}
+                  <X className="h-3 w-3" onClick={() => setSelectedTech("all")} />
+                </Badge>
+              )}
+              {searchQuery && (
+                <Badge variant="outline" size="sm" className="gap-1">
+                  "{searchQuery}"
+                  <X className="h-3 w-3" onClick={() => setSearchQuery("")} />
+                </Badge>
+              )}
+              <Button variant="ghost" size="sm" onClick={clearFilters}>
+                Clear all
+              </Button>
+            </motion.div>
+          )}
+        </motion.div>
+
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6, delay: 0.1 }}
           className="grid md:grid-cols-2 gap-6"
         >
-          {portfolioConfig.projects.items.map((project, index) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              index={index}
-              onClick={() => setSelectedProject(project)}
-            />
-          ))}
+          {filteredProjects.length === 0 ? (
+            <div className="col-span-full text-center py-12 glass rounded-2xl border-border/30">
+              <p className="text-muted-foreground">No projects match your filters.</p>
+              <Button variant="outline" className="mt-4" onClick={clearFilters}>
+                Clear filters
+              </Button>
+            </div>
+          ) : (
+            filteredProjects.map((project: typeof portfolioConfig.projects.items[0], index: number) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                index={index}
+                onClick={() => setSelectedProject(project)}
+              />
+            ))
+          )}
         </motion.div>
       </div>
 
@@ -118,22 +259,22 @@ function ProjectCard({ project, index, onClick }: ProjectCardProps) {
             {project.description}
           </p>
 
-<div className="flex flex-wrap gap-2 mb-5">
-  {project.technologies.slice(0, 6).map((tech) => {
-    const TechIcon = techIcons[tech]
-    return (
-      <Badge key={tech} variant="outline" size="sm">
-        {TechIcon && <TechIcon className="h-3 w-3 mr-1" />}
-        {tech}
-      </Badge>
-    )
-  })}
-  {project.technologies.length > 6 && (
-    <Badge variant="secondary" size="sm">
-      +{project.technologies.length - 6} more
-    </Badge>
-  )}
-</div>
+          <div className="flex flex-wrap gap-2 mb-5">
+            {project.technologies.slice(0, 6).map((tech) => {
+              const TechIcon = techIcons[tech]
+              return (
+                <Badge key={tech} variant="outline" size="sm">
+                  {TechIcon && <TechIcon className="h-3 w-3 mr-1" />}
+                  {tech}
+                </Badge>
+              )
+            })}
+            {project.technologies.length > 6 && (
+              <Badge variant="secondary" size="sm">
+                +{project.technologies.length - 6} more
+              </Badge>
+            )}
+          </div>
 
           <div className="pt-4 border-t border-border flex items-center justify-between">
             <span className="text-sm text-muted-foreground">View Details</span>
@@ -201,17 +342,17 @@ function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps) {
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <h4 className="font-mono text-xs text-primary uppercase tracking-wider mb-3">Technologies</h4>
-<div className="flex flex-wrap gap-2">
-  {project.technologies.map((tech) => {
-    const TechIcon = techIcons[tech]
-    return (
-      <Badge key={tech} variant="outline" size="sm">
-        {TechIcon && <TechIcon className="h-3 w-3 mr-1" />}
-        {tech}
-      </Badge>
-    )
-  })}
-</div>
+              <div className="flex flex-wrap gap-2">
+                {project.technologies.map((tech) => {
+                  const TechIcon = techIcons[tech]
+                  return (
+                    <Badge key={tech} variant="outline" size="sm">
+                      {TechIcon && <TechIcon className="h-3 w-3 mr-1" />}
+                      {tech}
+                    </Badge>
+                  )
+                })}
+              </div>
             </div>
             <div>
               <h4 className="font-mono text-xs text-primary uppercase tracking-wider mb-3">Key Features</h4>

@@ -283,6 +283,123 @@ export const portfolioConfig = {
         },
         repoUrl: "",
         liveUrl: ""
+      },
+      {
+        id: "campusresolve",
+        number: "05",
+        name: "CampusResolve — Student Grievance & Resolution Platform",
+        description: "A comprehensive campus grievance management system enabling students to report issues, track resolution progress, and administrators to manage workflows efficiently.",
+        technologies: ["React", "TypeScript", "Node.js", "Express", "MongoDB", "Socket.io", "Tailwind CSS"],
+        features: [
+          "Real-time grievance submission",
+          "Admin dashboard & analytics",
+          "Role-based access control",
+          "Email/SMS notifications",
+          "File attachments support",
+          "SLA tracking & escalation",
+          "Anonymous reporting option",
+          "Resolution timeline"
+        ],
+        detail: {
+          overview: "CampusResolve is a full-stack web application designed to streamline the grievance redressal process in educational institutions. It provides a transparent, efficient platform for students to voice concerns and for administration to manage resolutions with accountability.",
+          problem: "Students often face difficulties reporting campus issues (infrastructure, academics, harassment, facilities) due to opaque processes, lack of tracking, and fear of retaliation. Administrators struggle with manual paperwork, delayed responses, and no analytics on recurring issues.",
+          solution: "A digital platform with student-facing portal for submitting grievances with categories, priority, and evidence. Admin dashboard for triaging, assigning, tracking SLA compliance, and generating reports. Real-time notifications keep all stakeholders informed. Anonymous reporting option encourages sensitive disclosures.",
+          architecture: "MERN stack with WebSocket integration. React/TypeScript frontend with Tailwind CSS. Node.js/Express REST API with JWT authentication. MongoDB for flexible document storage. Socket.io for real-time updates. Role-based middleware for access control.",
+          techStack: ["React 18", "TypeScript", "Vite", "Node.js", "Express", "MongoDB", "Mongoose", "Socket.io", "JWT", "Nodemailer", "Twilio", "Tailwind CSS", "Chart.js"],
+          keyFeatures: [
+            "Multi-category grievance submission (Academic, Infrastructure, Harassment, Facilities, Other)",
+            "Priority levels with auto-escalation on SLA breach",
+            "Admin dashboard with real-time stats, charts, and filters",
+            "Department/warden assignment with workload balancing",
+            "Email and SMS notifications via Nodemailer/Twilio",
+            "File upload for evidence (images, documents)",
+            "Anonymous mode with token-based tracking",
+            "Resolution timeline with status history",
+            "Analytics: category trends, resolution times, department performance",
+            "Audit logs for compliance"
+          ],
+          challenges: [
+            "Ensuring anonymity while maintaining accountability",
+            "Real-time sync across multiple admin users",
+            "Scalable notification system for high volume",
+            "Complex role hierarchy (Student, Warden, HOD, Dean, Admin)",
+            "Data privacy and retention compliance"
+          ],
+          futureImprovements: [
+            "Mobile app (React Native/Flutter)",
+            "AI-powered categorization and priority suggestion",
+            "Integration with existing ERP/SIS systems",
+            "Multilingual support for diverse campuses",
+            "Public API for third-party integrations",
+            "Advanced analytics with ML predictions"
+          ]
+        },
+        repoUrl: "",
+        liveUrl: ""
+      },
+      {
+        id: "jewel-erp",
+        number: "06",
+        name: "Jewel ERP — Jewellery & Pawn Broking Management",
+        description: "Offline-first, full-featured ERP for Indian jewellery stores and pawn brokers. Manages inventory, GST invoices, pawn loans (Girvi), interest calculations, statutory registers (Form S/H), daily cash book, and multi-language printing — all in a single PWA/Android app.",
+        technologies: ["React 19", "TypeScript", "Vite 8", "Tailwind CSS 4", "Dexie.js", "IndexedDB", "Capacitor 8", "html5-qrcode", "Lucide React"],
+        features: [
+          "Offline-first: 100% local storage via IndexedDB (Dexie.js)",
+          "Inventory & tray/box management with HUID hallmark tracking",
+          "GST-compliant invoicing with old gold exchange & making charges",
+          "Pawn broking (Girvi) full lifecycle: pledge → interest → redeem → auction",
+          "Statutory Form S & Form H registers with CSV export",
+          "Daily cash book (Rojmel) with auto-compilation from transactions",
+          "Multi-language print: English, Hindi, Tamil, Telugu, Gujarati",
+          "3 print formats: Thermal 58/80mm, A4, Token tags",
+          "QR/Barcode scanner for item & loan lookup",
+          "JSON backup/restore & factory reset",
+          "Android APK via Capacitor 8"
+        ],
+        detail: {
+          overview: "Jewel ERP is a complete offline-first ERP system purpose-built for Indian jewellery shops that also operate pawn-broking (Girvi) services. It runs entirely in the browser using IndexedDB — no server, no cloud, no subscription. The app can also be compiled into a native Android APK via Capacitor.",
+          problem: "Small and family-run jewellers in India need a comprehensive digital solution for inventory, billing, pawn loans, and regulatory compliance — but existing solutions are either cloud-dependent (requiring internet), expensive SaaS, or lack Indian statutory features (GST, Form S/H, hallmark HUID). There was no single offline-capable tool covering all these needs.",
+          solution: "A React 19 + TypeScript PWA with Dexie.js IndexedDB backend. Features: tray/box inventory system with pure metal weight conversion; GST invoicing with CGST/SGST/IGST; pawn loan engine with 3%/month gold and 5%/month silver interest plus 2-day grace rule; statutory Form S (redeemed loans) and Form H (active pledges) registers; daily cash book auto-compiled from sales/interest/old gold; 5-language print system with per-print language switching; QR scanner via device camera; JSON export/import for backup/migration; Capacitor Android build for native distribution.",
+          architecture: "Single-page React 19 app (no router — tab-based state). Dexie.js ORM over IndexedDB (10 tables: storeProfile, metalRates, boxes, inventory, pawnLoans, pawnPayments, formSRecords, invoices, oldGoldPurchases, cashBook). All data operations are synchronous to IndexedDB; UI state syncs via React state refreshed from DB after mutations. Modular components: Dashboard, InventoryManager, PawnBroking, BillingManager, CustomerPassbook, CashBookManager, StatutoryFormsModal, StoreSettings, PrintModal, plus 8 creation/editing modals. Calculations & translations in pure TS utilities. Capacitor bridge for Android WebView.",
+          techStack: ["React 19", "TypeScript 6", "Vite 8", "Tailwind CSS 4", "Dexie.js 4", "html5-qrcode 2", "Lucide React", "Capacitor 8", "OxLint"],
+          keyFeatures: [
+            "Tray/box inventory with tare weight, net weight, and 24K/999 pure weight auto-calc",
+            "Hallmark HUID tracking per item (BIS compliance)",
+            "GST tax invoices with HSN 7113, CGST/SGST/IGST, old gold deduction",
+            "Pawn loans: multi-item pledge, auto loan/token numbering (PB-YYYY-NNNN), KYC with photos",
+            "Interest engine: actual rate (3%/5%) + statutory 14% p.a. with 2-day grace rule",
+            "Form S (settled) & Form H (active) statutory registers, CSV export, print-ready",
+            "Daily cash book (Rojmel) auto-compiles from invoices, interest, disbursements, old gold",
+            "Customer passbook aggregates loans & invoices by phone number",
+            "Print system: thermal (58/80mm), A4, token tags — 5 languages, on-the-fly switching",
+            "QR/barcode camera scanner routes to matching inventory item or pawn loan",
+            "Full JSON backup/restore + factory reset",
+            "Android APK via Capacitor 8 (package: com.jewelerp.app)"
+          ],
+          challenges: [
+            "Accurate pure weight conversion across 7 karat types (24K, 22K, 18K, 14K, 999, 925, Other)",
+            "Complex interest calculation with 2-day grace rule per Indian pawn convention",
+            "Statutory Form S/H compliance matching government-prescribed register formats",
+            "Multi-language print translations with bilingual labels (native + English)",
+            "Offline-first architecture: no server sync, conflict-free local-only mutations",
+            "Print CSS for thermal/A4/token formats with @media print and no-print classes",
+            "IndexedDB schema migrations and JSON import/export with data integrity"
+          ],
+          futureImprovements: [
+            "Cloud sync (Firebase/Supabase) for multi-device access",
+            "WhatsApp integration for payment reminders and overdue alerts",
+            "Barcode/RFID tag printing integration",
+            "Photo capture via device camera for items and customers",
+            "Advanced analytics dashboard with charts",
+            "iOS Capacitor build",
+            "PWA Service Worker for full offline installability",
+            "Multi-store/branch support",
+            "Role-based access control (Owner/Staff)",
+            "Automated SMS/email notifications for overdue loans"
+          ]
+        },
+        repoUrl: "",
+        liveUrl: ""
       }
     ]
   },
@@ -419,6 +536,72 @@ export const portfolioConfig = {
         name: "Intelligent Agents",
         description: "Autonomous systems that perceive, reason, and act in digital environments.",
         icon: "bot"
+      }
+    ]
+  },
+
+  blog: {
+    title: "Blog & Writings",
+    items: [
+      {
+        id: "building-nexus-ai-agent",
+        title: "Building NEXUS: A Personal AI Computer Agent",
+        description: "Deep dive into the architecture of a voice-controlled AI agent system with multi-agent orchestration for computer automation.",
+        date: "2024-12-15",
+        tags: ["AI", "Python", "Agents", "Automation"],
+        readTime: "12 min",
+        url: "",
+        featured: true
+      },
+      {
+        id: "offline-first-jewel-erp",
+        title: "Offline-First Architecture: Building Jewel ERP with IndexedDB",
+        description: "How to build a fully offline-capable PWA for jewellery and pawn management using React, Dexie.js, and Capacitor.",
+        date: "2024-10-20",
+        tags: ["React", "TypeScript", "IndexedDB", "PWA", "Capacitor"],
+        readTime: "15 min",
+        url: "",
+        featured: true
+      },
+      {
+        id: "rtos-kernel-from-scratch",
+        title: "Writing a Preemptive RTOS Kernel from Scratch in C",
+        description: "Lessons learned implementing a priority-based scheduler, IPC primitives, and memory pools for ARM Cortex-M.",
+        date: "2024-08-10",
+        tags: ["C", "RTOS", "Embedded Systems", "Systems Programming"],
+        readTime: "18 min",
+        url: "",
+        featured: false
+      },
+      {
+        id: "blockchain-academic-records",
+        title: "Blockchain for Academic Credential Verification",
+        description: "Designing a tamper-proof credential system using Hyperledger Fabric with W3C Verifiable Credentials compliance.",
+        date: "2024-05-22",
+        tags: ["Blockchain", "Cryptography", "Hyperledger", "Web Development"],
+        readTime: "10 min",
+        url: "",
+        featured: false
+      },
+      {
+        id: "campusresolve-grpc-design",
+        title: "Real-time Grievance Management with WebSockets",
+        description: "Architecture decisions behind CampusResolve: MERN stack, Socket.io for real-time updates, and role-based access control.",
+        date: "2024-03-18",
+        tags: ["React", "Node.js", "MongoDB", "Socket.io", "System Design"],
+        readTime: "8 min",
+        url: "",
+        featured: false
+      },
+      {
+        id: "interest-calculation-pawn",
+        title: "The 2-Day Grace Rule: Interest Calculation in Indian Pawn Broking",
+        description: "Breaking down the specific interest calculation convention used in Indian pawn shops with code examples.",
+        date: "2024-01-30",
+        tags: ["FinTech", "Algorithms", "JavaScript", "Business Logic"],
+        readTime: "6 min",
+        url: "",
+        featured: false
       }
     ]
   },
