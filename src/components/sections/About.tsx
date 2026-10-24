@@ -22,10 +22,10 @@ export function About() {
     <section id="about" className="py-20 sm:py-28 lg:py-32">
       <div className="section-container">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
           className="max-w-3xl mx-auto text-center mb-16"
         >
           <span className="font-mono text-xs text-primary uppercase tracking-wider">About Me</span>
@@ -33,10 +33,10 @@ export function About() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4, delay: 0.05 }}
           className="grid lg:grid-cols-2 gap-12 items-start"
         >
           <div className="space-y-6">
@@ -55,10 +55,10 @@ export function About() {
   return (
     <motion.div
       key={interest}
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4, delay: i * 0.05 }}
+      viewport={{ once: true, margin: "0px 0px -50px 0px" }}
+      transition={{ duration: 0.3, delay: i * 0.03 }}
       className="flex items-center gap-3 p-3 rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/30 transition-all"
     >
       <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
@@ -74,10 +74,10 @@ export function About() {
 
           <div className="relative">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.98 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+              transition={{ duration: 0.4, delay: 0.1 }}
               className="relative glass p-8 rounded-2xl border-border/30"
             >
               <div className="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-primary/10 blur-2xl" aria-hidden="true" />

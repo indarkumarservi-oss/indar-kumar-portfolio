@@ -14,11 +14,11 @@ export function Certifications() {
     <section id="certifications" className="py-20 sm:py-28 lg:py-32">
       <div className="section-container">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto text-center mb-16"
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
+          className="max-w-3xl mx-auto text-center mb-12"
         >
           <span className="font-mono text-xs text-primary uppercase tracking-wider">Certifications</span>
           <h2 className="mt-4 section-heading">Verified Credentials</h2>
@@ -28,29 +28,29 @@ export function Certifications() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="grid md:grid-cols-2 gap-6"
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
+          className="grid md:grid-cols-2 gap-5"
         >
           {items.map((cert, index) => (
             <motion.div
               key={cert.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true, margin: "0px 0px -80px 0px" }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
             >
-              <Card className="glass h-full border-border/30 hover:border-primary/30 transition-all">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between gap-4 mb-4">
+              <Card className="glass h-full border-border/30 hover:border-primary/30 transition-all duration-200">
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between gap-4 mb-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <Award className="h-5 w-5 text-primary" />
                         <span className="font-mono text-xs text-primary uppercase tracking-wider">{cert.year}</span>
                       </div>
-                      <h3 className="text-xl font-semibold text-foreground">{cert.name}</h3>
+                      <h3 className="text-lg font-semibold text-foreground">{cert.name}</h3>
                       <p className="text-muted-foreground mt-1">{cert.provider}</p>
                     </div>
                     <div className="flex items-center gap-2 text-green-400">
@@ -58,8 +58,8 @@ export function Certifications() {
                     </div>
                   </div>
 
-                  <div className="mb-4">
-                    <h4 className="font-mono text-xs text-primary uppercase tracking-wider mb-3">Skills Validated</h4>
+                  <div className="mb-3">
+                    <h4 className="font-mono text-xs text-primary uppercase tracking-wider mb-2">Skills Validated</h4>
                     <div className="flex flex-wrap gap-2">
                       {cert.skills.map((skill) => (
                         <Badge key={skill} variant="outline" size="sm">
@@ -69,8 +69,8 @@ export function Certifications() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-border">
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <div className="flex items-center justify-between pt-3 border-t border-border">
+                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <BookOpen className="h-3.5 w-3.5" />
                         Verified
@@ -96,11 +96,11 @@ export function Certifications() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-12 text-center"
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="mt-10 text-center"
         >
           <div className="glass inline-flex items-center gap-3 px-6 py-4 rounded-xl border-border/30">
             <Clock className="h-5 w-5 text-primary" />

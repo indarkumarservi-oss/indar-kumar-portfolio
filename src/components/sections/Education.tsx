@@ -14,11 +14,11 @@ export function Education() {
     <section id="education" className="py-20 sm:py-28 lg:py-32">
       <div className="section-container">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto text-center mb-16"
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
+          className="max-w-3xl mx-auto text-center mb-12"
         >
           <span className="font-mono text-xs text-primary uppercase tracking-wider">Education</span>
           <h2 className="mt-4 section-heading">Academic Background</h2>
@@ -28,22 +28,22 @@ export function Education() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
           className="relative max-w-2xl mx-auto"
         >
           <div className="absolute left-8 top-0 bottom-0 w-[2px] bg-gradient-to-b from-primary/30 to-transparent" aria-hidden="true" />
 
-          <div className="space-y-10">
+          <div className="space-y-8">
             {items.map((edu, index) => (
               <motion.div
                 key={edu.id}
-                initial={{ opacity: 0, x: -30 }}
+                initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.15 }}
+                viewport={{ once: true, margin: "0px 0px -80px 0px" }}
+                transition={{ duration: 0.4, delay: index * 0.08 }}
                 className="relative pl-16"
               >
                 <div className="absolute left-0 top-2 flex h-10 w-10 items-center justify-center">
@@ -103,11 +103,11 @@ export function Education() {
           </div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: items.length * 0.15 }}
-            className="mt-12 text-center"
+            viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+            transition={{ duration: 0.4, delay: items.length * 0.08 }}
+            className="mt-10 text-center"
           >
             <div className="glass inline-flex items-center gap-3 px-6 py-4 rounded-xl border-border/30">
               <Award className="h-5 w-5 text-primary" />

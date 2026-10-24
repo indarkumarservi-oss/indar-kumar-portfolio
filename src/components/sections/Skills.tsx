@@ -29,11 +29,11 @@ export function Skills() {
     <section id="skills" className="py-20 sm:py-28 lg:py-32">
       <div className="section-container">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto text-center mb-16"
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
+          className="max-w-3xl mx-auto text-center mb-12"
         >
           <span className="font-mono text-xs text-primary uppercase tracking-wider">Technical Skills</span>
           <h2 className="mt-4 section-heading">Technologies & Tools I Work With</h2>
@@ -43,37 +43,37 @@ export function Skills() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="space-y-12"
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
+          className="space-y-10"
         >
           {categories.map((category, catIndex) => (
             <motion.div
               key={category.name}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: catIndex * 0.1 }}
+              viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+              transition={{ duration: 0.4, delay: catIndex * 0.05 }}
             >
-              <div className="flex items-center gap-3 mb-6">
-  <div className={cn(
-    "h-10 w-10 rounded-xl flex items-center justify-center",
-    `bg-gradient-to-br ${categoryColors[category.name as keyof typeof categoryColors] || "from-gray-500 to-gray-600"}`
-  )}>
-    {(() => {
-      const Icon = categoryIcons[category.name]
-      return Icon ? <Icon className="h-5 w-5 text-white" /> : null
-    })()}
-  </div>
-  <div>
-    <h3 className="text-xl font-semibold text-foreground">{category.name}</h3>
-    <p className="text-sm text-muted-foreground">{category.items.length} technologies</p>
-  </div>
-</div>
+              <div className="flex items-center gap-3 mb-5">
+                <div className={cn(
+                  "h-10 w-10 rounded-xl flex items-center justify-center",
+                  `bg-gradient-to-br ${categoryColors[category.name as keyof typeof categoryColors] || "from-gray-500 to-gray-600"}`
+                )}>
+                  {(() => {
+                    const Icon = categoryIcons[category.name]
+                    return Icon ? <Icon className="h-5 w-5 text-white" /> : null
+                  })()}
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-foreground">{category.name}</h3>
+                  <p className="text-sm text-muted-foreground">{category.items.length} technologies</p>
+                </div>
+              </div>
 
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {category.items.map((skill, skillIndex) => (
                   <SkillCard
                     key={skill.name}
@@ -89,19 +89,19 @@ export function Skills() {
 
           <AnimatePresence>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, delay: categories.length * 0.1 }}
-              className="mt-12 glass p-6 rounded-2xl border-border/30"
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.4, delay: categories.length * 0.05 }}
+              className="mt-8 glass p-6 rounded-2xl border-border/30"
             >
               <h4 className="font-mono text-xs text-primary uppercase tracking-wider mb-4 flex items-center gap-2">
                 <Sparkles className="h-4 w-4" />
                 Proficiency Levels
               </h4>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {Object.entries(levelLabels).map(([level, label]) => (
-                  <div key={level} className="p-4 rounded-lg border border-border/50 bg-card/50">
+                  <div key={level} className="p-3 rounded-lg border border-border/50 bg-card/50">
                     <div className="font-medium text-foreground mb-1">{level}</div>
                     <div className="text-sm text-muted-foreground">{label}</div>
                   </div>
@@ -125,11 +125,11 @@ interface SkillCardProps {
 function SkillCard({ skill, levelLabel, index, categoryColor }: SkillCardProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      initial={{ opacity: 0, y: 10, scale: 0.98 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4, delay: index * 0.03 }}
-      className="group relative glass p-5 rounded-xl border-border/30 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300"
+      viewport={{ once: true, margin: "0px 0px -50px 0px" }}
+      transition={{ duration: 0.3, delay: index * 0.02 }}
+      className="group relative glass p-4 rounded-xl border-border/30 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
@@ -144,7 +144,8 @@ function SkillCard({ skill, levelLabel, index, categoryColor }: SkillCardProps) 
       <motion.div
         initial={{ height: 0, opacity: 0 }}
         animate={{ height: "auto", opacity: 1 }}
-        className="mt-3 overflow-hidden text-xs text-muted-foreground"
+        transition={{ duration: 0.2, delay: 0.1 }}
+        className="mt-2 overflow-hidden text-xs text-muted-foreground"
       >
         {levelLabel}
       </motion.div>

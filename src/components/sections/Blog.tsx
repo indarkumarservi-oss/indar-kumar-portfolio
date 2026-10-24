@@ -17,11 +17,11 @@ export function Blog() {
     <section id="blog" className="py-20 sm:py-28 lg:py-32">
       <div className="section-container">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto text-center mb-16"
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
+          className="max-w-3xl mx-auto text-center mb-12"
         >
           <span className="font-mono text-xs text-primary uppercase tracking-wider">Blog & Writings</span>
           <h2 className="mt-4 section-heading">Thoughts on Systems, AI & Engineering</h2>
@@ -32,17 +32,17 @@ export function Blog() {
 
         {featuredPosts.length > 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mb-16"
+            viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+            transition={{ duration: 0.4 }}
+            className="mb-12"
           >
-            <h3 className="font-mono text-xs text-primary uppercase tracking-wider mb-6 flex items-center gap-2">
+            <h3 className="font-mono text-xs text-primary uppercase tracking-wider mb-5 flex items-center gap-2">
               <Star className="h-4 w-4" />
               Featured
             </h3>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-5">
               {featuredPosts.map((post, index) => (
                 <BlogCard key={post.id} post={post} index={index} featured />
               ))}
@@ -51,13 +51,13 @@ export function Blog() {
         )}
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
         >
-          <h3 className="font-mono text-xs text-primary uppercase tracking-wider mb-6">Latest Posts</h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <h3 className="font-mono text-xs text-primary uppercase tracking-wider mb-5">Latest Posts</h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {regularPosts.map((post, index) => (
               <BlogCard key={post.id} post={post} index={index} />
             ))}
@@ -65,16 +65,16 @@ export function Blog() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-16 text-center"
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="mt-12 text-center"
         >
           <p className="text-muted-foreground mb-4">
             More writings coming soon. Subscribe to stay updated.
           </p>
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex items-center justify-center gap-3">
             <a
               href={portfolioConfig.contact.socialLinks.github || "#"}
               target="_blank"
@@ -113,16 +113,16 @@ function BlogCard({ post, index, featured = false }: BlogCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+      viewport={{ once: true, margin: "0px 0px -80px 0px" }}
+      transition={{ duration: 0.3, delay: index * 0.03 }}
       className="group"
     >
-      <Card className="h-full overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-primary/30">
-        <div className="relative h-40 bg-gradient-to-br from-primary/10 to-primary/5" />
-        <CardContent className="p-6 pt-4">
-          <div className="flex flex-wrap gap-2 mb-4">
+      <Card className="h-full overflow-hidden transition-all duration-200 hover:shadow-xl hover:border-primary/30">
+        <div className="relative h-36 bg-gradient-to-br from-primary/10 to-primary/5" />
+        <CardContent className="p-5 pt-4">
+          <div className="flex flex-wrap gap-2 mb-3">
             {post.tags.slice(0, 3).map((tag) => (
               <Badge key={tag} variant="outline" size="sm">
                 {tag}
@@ -141,15 +141,15 @@ function BlogCard({ post, index, featured = false }: BlogCardProps) {
             )}
           </div>
 
-          <h3 className="text-lg font-semibold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+          <h3 className="text-lg font-semibold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
             {post.title}
           </h3>
 
-          <p className="text-muted-foreground text-sm mb-4 line-clamp-3 leading-relaxed">
+          <p className="text-muted-foreground text-sm mb-3 line-clamp-3 leading-relaxed">
             {post.description}
           </p>
 
-          <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground mb-4">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground mb-3">
             <span className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
               {formatDate(post.date)}
@@ -160,7 +160,7 @@ function BlogCard({ post, index, featured = false }: BlogCardProps) {
             </span>
           </div>
 
-          <div className="pt-4 border-t border-border">
+          <div className="pt-3 border-t border-border">
             <a
               href={post.url || "#"}
               target="_blank"

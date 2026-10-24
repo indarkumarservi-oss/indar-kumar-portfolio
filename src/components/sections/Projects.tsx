@@ -93,11 +93,11 @@ export function Projects() {
     <section id="projects" className="py-20 sm:py-28 lg:py-32">
       <div className="section-container">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto text-center mb-12"
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
+          className="max-w-3xl mx-auto text-center mb-10"
         >
           <span className="font-mono text-xs text-primary uppercase tracking-wider">Featured Projects</span>
           <h2 className="mt-4 section-heading">Systems I've Engineered</h2>
@@ -107,10 +107,10 @@ export function Projects() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
           className="mb-10"
         >
           <div className="space-y-4">
@@ -187,10 +187,10 @@ export function Projects() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
           className="grid md:grid-cols-2 gap-6"
         >
           {filteredProjects.length === 0 ? (
@@ -234,11 +234,11 @@ interface ProjectCardProps {
 function ProjectCard({ project, index, onClick }: ProjectCardProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      whileHover={{ y: -8, transition: { duration: 0.3 } }}
+      viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+      transition={{ duration: 0.3, delay: index * 0.04 }}
+      whileHover={{ y: -6, transition: { duration: 0.2 } }}
     >
       <Card className="h-full group cursor-pointer overflow-hidden" onClick={onClick}>
         <div className="relative p-6">

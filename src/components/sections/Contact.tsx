@@ -13,11 +13,11 @@ export function Contact() {
     <section id="contact" className="py-20 sm:py-28 lg:py-32">
       <div className="section-container">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto text-center mb-16"
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
+          className="max-w-3xl mx-auto text-center mb-12"
         >
           <span className="font-mono text-xs text-primary uppercase tracking-wider">Get In Touch</span>
           <h2 className="mt-4 section-heading">Let's Build Something</h2>
@@ -27,16 +27,16 @@ export function Contact() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="grid lg:grid-cols-2 gap-12 max-w-4xl mx-auto"
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
+          className="grid lg:grid-cols-2 gap-10 max-w-4xl mx-auto"
         >
-          <div className="space-y-8">
+          <div className="space-y-6">
             <Card className="glass border-border/30">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-4">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-3">
                   <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
                     <Mail className="h-5 w-5 text-primary" />
                   </div>
@@ -56,8 +56,8 @@ export function Contact() {
             </Card>
 
             <Card className="glass border-border/30">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-4">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-3">
                   <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
                     <MapPin className="h-5 w-5 text-primary" />
                   </div>
@@ -72,8 +72,8 @@ export function Contact() {
             </Card>
 
             <Card className="glass border-border/30">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-4">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-3 mb-3">
                   <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
                     <Clock className="h-5 w-5 text-primary" />
                   </div>
@@ -95,14 +95,14 @@ export function Contact() {
 
           <div>
             <Card className="glass border-border/30 h-full">
-              <CardContent className="p-6">
+              <CardContent className="p-5">
                 <h3 className="text-xl font-semibold text-foreground mb-2">Send a Message</h3>
-                <p className="text-muted-foreground mb-6">
+                <p className="text-muted-foreground mb-5">
                   Have a project in mind or just want to say hello? I'd love to hear from you.
                 </p>
 
-                <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); window.location.href = `mailto:${email}?subject=Portfolio Contact&body=Hello Indar,` }}>
-                  <div className="grid sm:grid-cols-2 gap-4">
+                <form className="space-y-3" onSubmit={(e) => { e.preventDefault(); window.location.href = `mailto:${email}?subject=Portfolio Contact&body=Hello Indar,` }}>
+                  <div className="grid sm:grid-cols-2 gap-3">
                     <div>
                       <label htmlFor="name" className="block text-sm font-medium mb-1">Name</label>
                       <input
@@ -151,15 +151,15 @@ export function Contact() {
                   </Button>
                 </form>
 
-                <div className="mt-6 pt-6 border-t border-border">
-                  <p className="text-sm text-muted-foreground mb-4">Or connect directly:</p>
-                  <div className="flex flex-wrap gap-3">
+                <div className="mt-5 pt-5 border-t border-border">
+                  <p className="text-sm text-muted-foreground mb-3">Or connect directly:</p>
+                  <div className="flex flex-wrap gap-2">
                     {socialLinks.github && (
                       <a
                         href={socialLinks.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border hover:bg-accent transition-colors"
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border hover:bg-accent transition-colors"
                       >
                         <Github className="h-4 w-4" />
                         <span className="text-sm font-medium">GitHub</span>
@@ -171,7 +171,7 @@ export function Contact() {
                         href={socialLinks.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border hover:bg-accent transition-colors"
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border hover:bg-accent transition-colors"
                       >
                         <Linkedin className="h-4 w-4" />
                         <span className="text-sm font-medium">LinkedIn</span>
@@ -189,13 +189,13 @@ export function Contact() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-16 text-center"
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="mt-12 text-center"
         >
-          <div className="glass inline-flex items-center gap-3 px-6 py-4 rounded-xl border-border/30 max-w-2xl">
+          <div className="glass inline-flex items-center gap-3 px-5 py-3 rounded-xl border-border/30 max-w-2xl">
             <Mail className="h-5 w-5 text-primary" />
             <p className="text-muted-foreground text-sm">
               {email} — Usually respond within 24 hours

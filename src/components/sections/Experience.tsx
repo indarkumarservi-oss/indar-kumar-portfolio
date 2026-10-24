@@ -26,11 +26,11 @@ export function Experience() {
     <section id="experience" className="py-20 sm:py-28 lg:py-32">
       <div className="section-container">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto text-center mb-16"
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
+          className="max-w-3xl mx-auto text-center mb-12"
         >
           <span className="font-mono text-xs text-primary uppercase tracking-wider">Experience & Activities</span>
           <h2 className="mt-4 section-heading">Where I've Applied My Skills</h2>
@@ -40,74 +40,74 @@ export function Experience() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="space-y-10"
+          viewport={{ once: true, margin: "0px 0px -150px 0px" }}
+          transition={{ duration: 0.4 }}
+          className="space-y-8"
         >
-{categories.map((category, catIndex) => {
-  const CategoryIcon = categoryIcons[category.name]
-  return (
-    <motion.div
-      key={category.name}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: catIndex * 0.1 }}
-    >
-      <div className="flex items-center gap-3 mb-6">
-        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-          {CategoryIcon && <CategoryIcon className="h-5 w-5 text-primary" />}
-        </div>
-        <div>
-          <h3 className="text-xl font-semibold text-foreground">{category.name}</h3>
-          <p className="text-sm text-muted-foreground">{category.items.length} entries</p>
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        {category.items.map((item, itemIndex) => (
-          <motion.div
-            key={item.title}
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: itemIndex * 0.05 }}
-          >
-            <Card className="glass border-border/30 hover:border-primary/30 transition-all">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between gap-4 mb-3">
-                  <div className="flex-1">
-                    <h4 className="text-lg font-semibold text-foreground">{item.title}</h4>
-                    <p className="text-muted-foreground mt-1">{item.period}</p>
+          {categories.map((category, catIndex) => {
+            const CategoryIcon = categoryIcons[category.name]
+            return (
+              <motion.div
+                key={category.name}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+                transition={{ duration: 0.4, delay: catIndex * 0.05 }}
+              >
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                    {CategoryIcon && <CategoryIcon className="h-5 w-5 text-primary" />}
                   </div>
-                  <Badge
-                    variant="outline"
-                    className={cn(typeColors[category.type as keyof typeof typeColors] || "bg-gray-500/10 text-gray-400 border-gray-500/20")}
-                  >
-                    {category.type}
-                  </Badge>
+                  <div>
+                    <h3 className="text-xl font-semibold text-foreground">{category.name}</h3>
+                    <p className="text-sm text-muted-foreground">{category.items.length} entries</p>
+                  </div>
                 </div>
-                <p className="text-muted-foreground leading-relaxed">{item.description}</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
-    </motion.div>
-  )
-})}
+
+                <div className="space-y-3">
+                  {category.items.map((item, itemIndex) => (
+                    <motion.div
+                      key={item.title}
+                      initial={{ opacity: 0, x: -15 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, margin: "0px 0px -50px 0px" }}
+                      transition={{ duration: 0.3, delay: itemIndex * 0.03 }}
+                    >
+                      <Card className="glass border-border/30 hover:border-primary/30 transition-all duration-200">
+                        <CardContent className="p-5">
+                          <div className="flex items-start justify-between gap-4 mb-2">
+                            <div className="flex-1">
+                              <h4 className="text-lg font-semibold text-foreground">{item.title}</h4>
+                              <p className="text-muted-foreground mt-1">{item.period}</p>
+                            </div>
+                            <Badge
+                              variant="outline"
+                              className={cn(typeColors[category.type as keyof typeof typeColors] || "bg-gray-500/10 text-gray-400 border-gray-500/20")}
+                            >
+                              {category.type}
+                            </Badge>
+                          </div>
+                          <p className="text-muted-foreground leading-relaxed">{item.description}</p>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )
+          })}
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-12 glass p-6 rounded-2xl border-border/30"
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="mt-10 glass p-6 rounded-2xl border-border/30"
         >
-          <div className="grid sm:grid-cols-3 gap-6 text-center">
+          <div className="grid sm:grid-cols-3 gap-5 text-center">
             <StatItem value="4+" label="Major Projects" icon={Layers} />
             <StatItem value="15+" label="Technologies Used" icon={Code} />
             <StatItem value="3+" label="Years Learning" icon={Brain} />
@@ -126,8 +126,8 @@ interface StatItemProps {
 
 function StatItem({ value, label, icon: Icon }: StatItemProps) {
   return (
-    <div className="p-4">
-      <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
+    <div className="p-3">
+      <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-2">
         <Icon className="h-5 w-5 text-primary" />
       </div>
       <div className="text-2xl font-bold text-foreground">{value}</div>
