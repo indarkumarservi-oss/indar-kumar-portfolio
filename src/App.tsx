@@ -30,35 +30,37 @@ export default function App() {
   return (
     <ThemeProvider>
       <TooltipProvider>
-        <GlobalBackground className="fixed inset-0 -z-10" aria-hidden="true" />
-        <div className="vignette-strong" aria-hidden="true" />
-        <div className="min-h-screen bg-background/40 text-foreground relative z-0">
-          {!bootComplete && (
-            <BootScreen onComplete={() => setBootComplete(true)} reducedMotion={reducedMotion} />
-          )}
+        <div className="relative min-h-screen">
+          <GlobalBackground className="fixed inset-0 -z-10" aria-hidden="true" />
+          <div className="vignette-strong fixed inset-0 pointer-events-none -z-10" aria-hidden="true" />
+          <div className="min-h-screen bg-transparent text-foreground relative z-10">
+            {!bootComplete && (
+              <BootScreen onComplete={() => setBootComplete(true)} reducedMotion={reducedMotion} />
+            )}
 
-          {bootComplete && (
-            <>
-              <Navigation />
-              <main id="main-content">
-                <Hero />
-                <About />
-                <Skills />
-                <Projects />
-                <Education />
-                <Certifications />
-                <Experience />
-                <WhatIBuild />
-                <GitHub />
-                <Blog />
-                <Contact />
-                <Footer />
-              </main>
-              <CustomCursor />
-              <CommandPalette />
-              <Terminal initiallyOpen={false} />
-            </>
-          )}
+            {bootComplete && (
+              <>
+                <Navigation />
+                <main id="main-content">
+                  <Hero />
+                  <About />
+                  <Skills />
+                  <Projects />
+                  <Education />
+                  <Certifications />
+                  <Experience />
+                  <WhatIBuild />
+                  <GitHub />
+                  <Blog />
+                  <Contact />
+                  <Footer />
+                </main>
+                <CustomCursor />
+                <CommandPalette />
+                <Terminal initiallyOpen={false} />
+              </>
+            )}
+          </div>
         </div>
       </TooltipProvider>
     </ThemeProvider>

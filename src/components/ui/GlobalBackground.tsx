@@ -8,10 +8,19 @@ export function GlobalBackground({ className = "" }: { className?: string }) {
   const mountRef = useRef<HTMLDivElement>(null)
   const reducedMotion = useReducedMotion()
   const [mounted, setMounted] = useState(false)
-  const [scrollY, setScrollY] = useState(0)
+  const scrollYRef = useRef(0)
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
+    let ticking = false
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          scrollYRef.current = window.scrollY
+          ticking = false
+        })
+        ticking = true
+      }
+    }
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
@@ -19,111 +28,84 @@ export function GlobalBackground({ className = "" }: { className?: string }) {
   useEffect(() => {
     setMounted(true)
     const container = mountRef.current
-    if (!container) return
+    if (! container) return
 
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 2000)
     camera.position.z = 100
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, premultipliedAlpha: true })
+    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: "high-performance" })
     renderer.setSize(container.clientWidth, container.clientHeight)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
     renderer.setClearColor(0x000000, 0)
     container.appendChild(renderer.domElement)
 
-    // ===== LAYER 1: Deep Space Particles =====
-    const deepParticleCount = reducedMotion ? 600 : 2000
-    const deepGeometry = new THREE.BufferGeometry()
-    const deepPositions = new Float32Array(deepParticleCount * 3)
-    const deepColors = new Float32Array(deepParticleCount * 3)
-    const deepSizes = new Float32Array(deepParticleCount)
-    const deepVelocities = new Float32Array(deepParticleCount * 3)
-    const deepPhases = new Float32Array(deepParticleCount)
+    // ===== OPTIMIZED: Single merged particle system =====
+    const particleCount = reducedMotion ? 400 : 1000
+    const geometry = new THREE.BufferGeometry()
+    const positions = new Float32Array(particleCount * 3)
+    const colors = new Float32Array(particleCount * 3)
+    const sizes = new Float32Array(particleCount)
+    const velocities = new Float32Array(particleCount * 3)
+    const phases = new Float32Array(particleCount)
+    const layers = new Float32Array(particleCount) // 0 = deep, 1 = mid, 2 = foreground
 
     const colorPrimary = new THREE.Color("hsl(var(--primary))")
-    const colorSecondary = new THREE.Color("#00ffff")
-    const colorAccent = new THREE.Color("#ff0066")
 
-    for (let i = 0; i < deepParticleCount; i++) {
-      const radius = 100 + Math.random() * 300
-      const theta = Math.random() * Math.PI * 2
-      const phi = Math.acos(2 * Math.random() - 1)
+    for (let i = 0; i < particleCount; i++) {
+      const layer = Math.random()
+      layers[i] = layer
 
-      deepPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta)
-      deepPositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta)
-      deepPositions[i * 3 + 2] = radius * Math.cos(phi) - 200
-
-      const colorChoice = Math.random()
-      if (colorChoice < 0.5) {
-        deepColors[i * 3] = colorPrimary.r * 0.25
-        deepColors[i * 3 + 1] = colorPrimary.g * 0.25
-        deepColors[i * 3 + 2] = colorPrimary.b * 0.25
-      } else if (colorChoice < 0.75) {
-        deepColors[i * 3] = colorSecondary.r * 0.15
-        deepColors[i * 3 + 1] = colorSecondary.g * 0.15
-        deepColors[i * 3 + 2] = colorSecondary.b * 0.15
+      if (layer < 0.4) {
+        // Deep layer - sparse, slow
+        const radius = 150 + Math.random() * 350
+        const theta = Math.random() * Math.PI * 2
+        const phi = Math.acos(2 * Math.random() - 1)
+        positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta)
+        positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta)
+        positions[i * 3 + 2] = radius * Math.cos(phi) - 200
+        sizes[i] = 0.3 + Math.random() * 0.5
+        velocities[i * 3] = (Math.random() - 0.5) * 0.002
+        velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.002
+        velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.002
+        colors[i * 3] = colorPrimary.r * 0.2
+        colors[i * 3 + 1] = colorPrimary.g * 0.2
+        colors[i * 3 + 2] = colorPrimary.b * 0.2
+      } else if (layer < 0.85) {
+        // Mid layer - flowing field
+        positions[i * 3] = (Math.random() - 0.5) * 500
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 500
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 300 - 100
+        sizes[i] = 0.6 + Math.random() * 0.8
+        velocities[i * 3] = (Math.random() - 0.5) * 0.008
+        velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.008
+        velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.004
+        colors[i * 3] = colorPrimary.r * (0.3 + Math.random() * 0.3)
+        colors[i * 3 + 1] = colorPrimary.g * (0.3 + Math.random() * 0.3)
+        colors[i * 3 + 2] = colorPrimary.b * (0.3 + Math.random() * 0.3)
       } else {
-        deepColors[i * 3] = colorAccent.r * 0.1
-        deepColors[i * 3 + 1] = colorAccent.g * 0.1
-        deepColors[i * 3 + 2] = colorAccent.b * 0.1
+        // Foreground - interactive
+        positions[i * 3] = (Math.random() - 0.5) * 250
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 250
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 100 + 30
+        sizes[i] = 1.0 + Math.random() * 1.5
+        velocities[i * 3] = (Math.random() - 0.5) * 0.015
+        velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.015
+        velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.01
+        colors[i * 3] = colorPrimary.r
+        colors[i * 3 + 1] = colorPrimary.g
+        colors[i * 3 + 2] = colorPrimary.b
       }
-
-      deepSizes[i] = 0.2 + Math.random() * 0.6
-      deepVelocities[i * 3] = (Math.random() - 0.5) * 0.003
-      deepVelocities[i * 3 + 1] = (Math.random() - 0.5) * 0.003
-      deepVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.003
-      deepPhases[i] = Math.random() * Math.PI * 2
+      phases[i] = Math.random() * Math.PI * 2
     }
 
-    deepGeometry.setAttribute("position", new THREE.BufferAttribute(deepPositions, 3))
-    deepGeometry.setAttribute("color", new THREE.BufferAttribute(deepColors, 3))
-    deepGeometry.setAttribute("size", new THREE.BufferAttribute(deepSizes, 1))
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
+    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3))
+    geometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1))
+    geometry.setAttribute("layer", new THREE.BufferAttribute(layers, 1))
 
-    const deepMaterial = new THREE.PointsMaterial({
-      size: 1,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.3,
-      sizeAttenuation: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-    })
-
-    const deepParticles = new THREE.Points(deepGeometry, deepMaterial)
-    scene.add(deepParticles)
-
-    // ===== LAYER 2: Flowing Data Field =====
-    const fieldParticleCount = reducedMotion ? 400 : 1200
-    const fieldGeometry = new THREE.BufferGeometry()
-    const fieldPositions = new Float32Array(fieldParticleCount * 3)
-    const fieldColors = new Float32Array(fieldParticleCount * 3)
-    const fieldSizes = new Float32Array(fieldParticleCount)
-    const fieldVelocities = new Float32Array(fieldParticleCount * 3)
-    const fieldNoiseOffset = new Float32Array(fieldParticleCount)
-
-    for (let i = 0; i < fieldParticleCount; i++) {
-      fieldPositions[i * 3] = (Math.random() - 0.5) * 600
-      fieldPositions[i * 3 + 1] = (Math.random() - 0.5) * 600
-      fieldPositions[i * 3 + 2] = (Math.random() - 0.5) * 400 - 100
-
-      const intensity = 0.3 + Math.random() * 0.5
-      fieldColors[i * 3] = colorPrimary.r * intensity
-      fieldColors[i * 3 + 1] = colorPrimary.g * intensity
-      fieldColors[i * 3 + 2] = colorPrimary.b * intensity
-
-      fieldSizes[i] = 0.5 + Math.random() * 1.2
-      fieldVelocities[i * 3] = (Math.random() - 0.5) * 0.015
-      fieldVelocities[i * 3 + 1] = (Math.random() - 0.5) * 0.015
-      fieldVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.008
-      fieldNoiseOffset[i] = Math.random() * Math.PI * 2
-    }
-
-    fieldGeometry.setAttribute("position", new THREE.BufferAttribute(fieldPositions, 3))
-    fieldGeometry.setAttribute("color", new THREE.BufferAttribute(fieldColors, 3))
-    fieldGeometry.setAttribute("size", new THREE.BufferAttribute(fieldSizes, 1))
-
-    const fieldMaterial = new THREE.PointsMaterial({
-      size: 1.2,
+    const material = new THREE.PointsMaterial({
+      size: 1.5,
       vertexColors: true,
       transparent: true,
       opacity: 0.5,
@@ -132,115 +114,95 @@ export function GlobalBackground({ className = "" }: { className?: string }) {
       blending: THREE.AdditiveBlending,
     })
 
-    const fieldParticles = new THREE.Points(fieldGeometry, fieldMaterial)
-    scene.add(fieldParticles)
+    const particles = new THREE.Points(geometry, material)
+    scene.add(particles)
 
-    // ===== LAYER 3: Geometric Constellations =====
-    const constellations = new THREE.Group()
-    const constellationCount = reducedMotion ? 2 : 6
+    // ===== OPTIMIZED: Simple geometric shapes using InstancedMesh =====
+    const shapeCount = reducedMotion ? 2 : 4
+    const dummy = new THREE.Object3D()
+    const shapeGeometry = new THREE.IcosahedronGeometry(1, 0)
+    const edges = new THREE.EdgesGeometry(shapeGeometry)
+    const lineGeometry = new THREE.BufferGeometry().copy(edges)
+    const instanceMatrix = new THREE.InstancedBufferAttribute(new Float32Array(shapeCount * 16), 16)
+    const instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(shapeCount * 3), 3)
+    const instanceScale = new THREE.InstancedBufferAttribute(new Float32Array(shapeCount), 1)
+    const instanceSpeed = new THREE.InstancedBufferAttribute(new Float32Array(shapeCount * 3), 3)
+    const instanceOffset = new THREE.InstancedBufferAttribute(new Float32Array(shapeCount), 1)
 
-    for (let c = 0; c < constellationCount; c++) {
-      const geoType = Math.floor(Math.random() * 5)
-      let geometry: THREE.BufferGeometry
-      const size = 20 + Math.random() * 40
+    for (let i = 0; i < shapeCount; i++) {
+      const scale = 20 + Math.random() * 30
+      const x = (Math.random() - 0.5) * 400
+      const y = (Math.random() - 0.5) * 400 - 50
+      const z = (Math.random() - 0.5) * 200 - 50
 
-      if (geoType === 0) geometry = new THREE.IcosahedronGeometry(size, 0)
-      else if (geoType === 1) geometry = new THREE.OctahedronGeometry(size, 0)
-      else if (geoType === 2) geometry = new THREE.TetrahedronGeometry(size, 0)
-      else if (geoType === 3) geometry = new THREE.DodecahedronGeometry(size, 0)
-      else geometry = new THREE.BoxGeometry(size, size, size)
+      dummy.position.set(x, y, z)
+      dummy.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI)
+      dummy.scale.set(scale, scale, scale)
+      dummy.updateMatrix()
+      instanceMatrix.setX(i * 16 + 0, dummy.matrix.elements[0])
+      instanceMatrix.setX(i * 16 + 1, dummy.matrix.elements[1])
+      instanceMatrix.setX(i * 16 + 2, dummy.matrix.elements[2])
+      instanceMatrix.setX(i * 16 + 3, dummy.matrix.elements[3])
+      instanceMatrix.setX(i * 16 + 4, dummy.matrix.elements[4])
+      instanceMatrix.setX(i * 16 + 5, dummy.matrix.elements[5])
+      instanceMatrix.setX(i * 16 + 6, dummy.matrix.elements[6])
+      instanceMatrix.setX(i * 16 + 7, dummy.matrix.elements[7])
+      instanceMatrix.setX(i * 16 + 8, dummy.matrix.elements[8])
+      instanceMatrix.setX(i * 16 + 9, dummy.matrix.elements[9])
+      instanceMatrix.setX(i * 16 + 10, dummy.matrix.elements[10])
+      instanceMatrix.setX(i * 16 + 11, dummy.matrix.elements[11])
+      instanceMatrix.setX(i * 16 + 12, dummy.matrix.elements[12])
+      instanceMatrix.setX(i * 16 + 13, dummy.matrix.elements[13])
+      instanceMatrix.setX(i * 16 + 14, dummy.matrix.elements[14])
+      instanceMatrix.setX(i * 16 + 15, dummy.matrix.elements[15])
 
-      const edges = new THREE.EdgesGeometry(geometry)
-      const lineMaterial = new THREE.LineBasicMaterial({
-        color: new THREE.Color("hsl(var(--primary))"),
-        transparent: true,
-        opacity: 0.08,
-        depthWrite: false,
-      })
-
-      const mesh = new THREE.LineSegments(edges, lineMaterial)
-      mesh.position.set(
-        (Math.random() - 0.5) * 500,
-        (Math.random() - 0.5) * 500,
-        (Math.random() - 0.5) * 400 - 100
-      )
-      mesh.rotation.set(
-        Math.random() * Math.PI,
-        Math.random() * Math.PI,
-        Math.random() * Math.PI
-      )
-      mesh.userData = {
-        rotationSpeed: {
-          x: (Math.random() - 0.5) * 0.0005,
-          y: (Math.random() - 0.5) * 0.0005,
-          z: (Math.random() - 0.5) * 0.0005,
-        },
-        orbitRadius: 50 + Math.random() * 150,
-        orbitSpeed: 0.0001 + Math.random() * 0.0003,
-        orbitPhase: Math.random() * Math.PI * 2,
-        orbitAxis: new THREE.Vector3(
-          Math.random() - 0.5,
-          Math.random() - 0.5,
-          Math.random() - 0.5
-        ).normalize(),
-      }
-      constellations.add(mesh)
+      instanceColor.setXYZ(i, colorPrimary.r * 0.15, colorPrimary.g * 0.15, colorPrimary.b * 0.15)
+      instanceScale.setX(i, scale)
+      instanceSpeed.setXYZ(i, (Math.random() - 0.5) * 0.0003, (Math.random() - 0.5) * 0.0003, (Math.random() - 0.5) * 0.0003)
+      instanceOffset.setX(i, Math.random() * Math.PI * 2)
     }
-    scene.add(constellations)
 
-    // ===== LAYER 4: Energy Beams =====
-    const beams = new THREE.Group()
-    const beamCount = reducedMotion ? 5 : 15
+    lineGeometry.setAttribute("instanceMatrix", instanceMatrix)
+    lineGeometry.setAttribute("instanceColor", instanceColor)
+    lineGeometry.setAttribute("instanceScale", instanceScale)
+    lineGeometry.setAttribute("instanceSpeed", instanceSpeed)
+    lineGeometry.setAttribute("instanceOffset", instanceOffset)
 
-    for (let i = 0; i < beamCount; i++) {
-      const points = []
-      const segments = 15
-      for (let j = 0; j <= segments; j++) {
-        const t = j / segments
-        const x = (Math.random() - 0.5) * 500
-        const y = (Math.random() - 0.5) * 500
-        const z = -200 + t * 500
-        points.push(new THREE.Vector3(x, y, z))
-      }
+    const lineMaterial = new THREE.LineBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.1,
+      depthWrite: false,
+    })
 
-      const curve = new THREE.CatmullRomCurve3(points)
-      const tubeGeometry = new THREE.TubeGeometry(curve, 30, 0.2, 8, false)
-      const beamMaterial = new THREE.MeshBasicMaterial({
-        color: Math.random() < 0.5 ? new THREE.Color("hsl(var(--primary))") : new THREE.Color("#00ffff"),
-        transparent: true,
-        opacity: 0.06,
-        depthWrite: false,
-        side: THREE.DoubleSide,
-      })
+    const shapes = new THREE.InstancedMesh(lineGeometry, lineMaterial, shapeCount)
+    shapes.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+    scene.add(shapes)
 
-      const beam = new THREE.Mesh(tubeGeometry, beamMaterial)
-      beam.userData = { progress: Math.random(), speed: 0.00015 + Math.random() * 0.0004 }
-      beams.add(beam)
-    }
-    scene.add(beams)
-
-    // ===== LAYER 5: Subtle Grid Floor =====
-    const gridGeometry = new THREE.PlaneGeometry(800, 800, 80, 80)
+    // ===== OPTIMIZED: Simple grid (no wireframe subdivisions) =====
+    const gridGeometry = new THREE.PlaneGeometry(600, 600, 20, 20)
     const gridMaterial = new THREE.MeshBasicMaterial({
       color: new THREE.Color("hsl(var(--primary))"),
       transparent: true,
-      opacity: 0.015,
+      opacity: 0.02,
       wireframe: true,
       depthWrite: false,
       side: THREE.DoubleSide,
     })
     const grid = new THREE.Mesh(gridGeometry, gridMaterial)
     grid.rotation.x = -Math.PI / 2
-    grid.position.y = -250
+    grid.position.y = -200
     scene.add(grid)
 
-    // ===== MOUSE INTERACTION =====
+    // ===== MOUSE INTERACTION (throttled) =====
     let mouseX = 0
     let mouseY = 0
+    let mouseTargetX = 0
+    let mouseTargetY = 0
 
     const handleMouseMove = (event: MouseEvent) => {
-      mouseX = (event.clientX / window.innerWidth) * 2 - 1
-      mouseY = -(event.clientY / window.innerHeight) * 2 + 1
+      mouseTargetX = (event.clientX / window.innerWidth) * 2 - 1
+      mouseTargetY = -(event.clientY / window.innerHeight) * 2 + 1
     }
 
     container.addEventListener("mousemove", handleMouseMove)
@@ -253,89 +215,115 @@ export function GlobalBackground({ className = "" }: { className?: string }) {
       animationId = requestAnimationFrame(animate)
       time += 0.016
 
-      const scrollProgress = Math.min(scrollY / Math.max(1, document.body.scrollHeight - window.innerHeight), 1)
-      const scrollInfluence = scrollProgress * 300
+      // Smooth mouse interpolation
+      mouseX += (mouseTargetX - mouseX) * 0.05
+      mouseY += (mouseTargetY - mouseY) * 0.05
 
-      // Deep particles
-      deepParticles.rotation.y += 0.00003
-      deepParticles.rotation.x += 0.00001
-      deepParticles.position.y = -scrollInfluence * 0.08
+      const scrollProgress = Math.min(scrollYRef.current / Math.max(1, document.body.scrollHeight - window.innerHeight), 1)
+      const scrollInfluence = scrollProgress * 200
 
-      const deepPosArray = deepGeometry.attributes.position.array as Float32Array
-      for (let i = 0; i < deepParticleCount; i++) {
-        deepPosArray[i * 3] += deepVelocities[i * 3]
-        deepPosArray[i * 3 + 1] += deepVelocities[i * 3 + 1] + Math.sin(time * 0.3 + deepPhases[i]) * 0.0015
-        deepPosArray[i * 3 + 2] += deepVelocities[i * 3 + 2] + Math.cos(time * 0.2 + deepPhases[i]) * 0.001
+      // Single particle update loop - vectorized where possible
+      const posArray = geometry.attributes.position.array as Float32Array
+      const velArray = velocities
+      const layerArray = geometry.attributes.layer.array as Float32Array
+      const phaseArray = phases
 
-        const dist = Math.sqrt(
-          deepPosArray[i * 3] ** 2 +
-          deepPosArray[i * 3 + 1] ** 2 +
-          deepPosArray[i * 3 + 2] ** 2
-        )
-        if (dist > 400) {
-          const factor = 400 / dist
-          deepPosArray[i * 3] *= factor
-          deepPosArray[i * 3 + 1] *= factor
-          deepPosArray[i * 3 + 2] *= factor
+      for (let i = 0; i < particleCount; i++) {
+        const layer = layerArray[i]
+        const idx = i * 3
+
+        if (layer < 0.4) {
+          // Deep - slow rotation
+          posArray[idx] += velArray[idx]
+          posArray[idx + 1] += velArray[idx + 1] + Math.sin(time * 0.2 + phaseArray[i]) * 0.001
+          posArray[idx + 2] += velArray[idx + 2]
+
+          const dist = Math.sqrt(posArray[idx] ** 2 + posArray[idx + 1] ** 2 + posArray[idx + 2] ** 2)
+          if (dist > 500) {
+            const factor = 500 / dist
+            posArray[idx] *= factor
+            posArray[idx + 1] *= factor
+            posArray[idx + 2] *= factor
+          }
+        } else if (layer < 0.85) {
+          // Mid - flow with simple noise
+          const n = Math.sin(time * 0.3 + phaseArray[i] + posArray[idx] * 0.005)
+          posArray[idx] += velArray[idx] + n * 0.005
+          posArray[idx + 1] += velArray[idx + 1] + Math.cos(time * 0.3 + phaseArray[i] + posArray[idx + 1] * 0.005) * 0.005
+          posArray[idx + 2] += velArray[idx + 2]
+
+          // Scroll wave
+          const sw = Math.sin(scrollProgress * Math.PI * 4 + phaseArray[i])
+          posArray[idx + 1] += sw * 0.008
+          posArray[idx + 2] += sw * 0.01
+
+          // Wrap
+          if (posArray[idx] > 250) posArray[idx] = -250
+          if (posArray[idx] < -250) posArray[idx] = 250
+          if (posArray[idx + 1] > 250) posArray[idx + 1] = -250
+          if (posArray[idx + 1] < -250) posArray[idx + 1] = 250
+          if (posArray[idx + 2] > 150) posArray[idx + 2] = -150
+          if (posArray[idx + 2] < -150) posArray[idx + 2] = 150
+        } else {
+          // Foreground - mouse interaction
+          const dx = posArray[idx] - mouseX * 80
+          const dy = posArray[idx + 1] - mouseY * 80
+          const dist = Math.sqrt(dx * dx + dy * dy)
+
+          if (dist < 120 && !reducedMotion) {
+            const force = (120 - dist) / 120 * 0.05
+            velArray[idx] += (dx / dist) * force
+            velArray[idx + 1] += (dy / dist) * force
+          }
+
+          posArray[idx] += velArray[idx]
+          posArray[idx + 1] += velArray[idx + 1]
+          posArray[idx + 2] += velArray[idx + 2]
+
+          velArray[idx] *= 0.97
+          velArray[idx + 1] *= 0.97
+          velArray[idx + 2] *= 0.97
+
+          // Return to base
+          const baseX = (Math.sin(phaseArray[i]) * 125)
+          const baseY = (Math.cos(phaseArray[i]) * 125)
+          velArray[idx] += (baseX - posArray[idx]) * 0.0005
+          velArray[idx + 1] += (baseY - posArray[idx + 1]) * 0.0005
+
+          if (posArray[idx] > 150) posArray[idx] = -150
+          if (posArray[idx] < -150) posArray[idx] = 150
+          if (posArray[idx + 1] > 150) posArray[idx + 1] = -150
+          if (posArray[idx + 1] < -150) posArray[idx + 1] = 150
         }
       }
-      deepGeometry.attributes.position.needsUpdate = true
+      geometry.attributes.position.needsUpdate = true
 
-      // Field particles - noise-based flow
-      const fieldPosArray = fieldGeometry.attributes.position.array as Float32Array
-      for (let i = 0; i < fieldParticleCount; i++) {
-        const noiseX = Math.sin(time * 0.4 + fieldNoiseOffset[i] + fieldPosArray[i * 3] * 0.01)
-        const noiseY = Math.cos(time * 0.4 + fieldNoiseOffset[i] + fieldPosArray[i * 3 + 1] * 0.01)
-        const scrollWave = Math.sin(scrollProgress * Math.PI * 6 + fieldNoiseOffset[i])
+      // Instanced shapes rotation (GPU-friendly)
+      const speedArray = shapes.instanceMatrix.array
+      const instSpeed = shapes.geometry.attributes.instanceSpeed as THREE.InstancedBufferAttribute
+      const instOffset = shapes.geometry.attributes.instanceOffset as THREE.InstancedBufferAttribute
 
-        fieldPosArray[i * 3] += fieldVelocities[i * 3] + noiseX * 0.008 + scrollWave * 0.01
-        fieldPosArray[i * 3 + 1] += fieldVelocities[i * 3 + 1] + noiseY * 0.008
-        fieldPosArray[i * 3 + 2] += fieldVelocities[i * 3 + 2] + scrollWave * 0.015
-
-        // Wrap around with large bounds
-        if (fieldPosArray[i * 3] > 300) fieldPosArray[i * 3] = -300
-        if (fieldPosArray[i * 3] < -300) fieldPosArray[i * 3] = 300
-        if (fieldPosArray[i * 3 + 1] > 300) fieldPosArray[i * 3 + 1] = -300
-        if (fieldPosArray[i * 3 + 1] < -300) fieldPosArray[i * 3 + 1] = 300
-        if (fieldPosArray[i * 3 + 2] > 200) fieldPosArray[i * 3 + 2] = -200
-        if (fieldPosArray[i * 3 + 2] < -200) fieldPosArray[i * 3 + 2] = 200
+      for (let i = 0; i < shapeCount; i++) {
+        dummy.position.setFromMatrixPosition(new THREE.Matrix4().fromArray(speedArray, i * 16))
+        dummy.rotation.x += instSpeed.getX(i * 3)
+        dummy.rotation.y += instSpeed.getX(i * 3 + 1)
+        dummy.rotation.z += instSpeed.getX(i * 3 + 2)
+        dummy.position.y = -50 - scrollInfluence * 0.02 + Math.sin(time * 0.001 + instOffset.getX(i)) * 3
+        dummy.updateMatrix()
+        speedArray.set(dummy.matrix.elements, i * 16)
       }
-      fieldGeometry.attributes.position.needsUpdate = true
-
-      // Constellations - rotate and orbit
-      constellations.children.forEach((mesh) => {
-        const data = mesh.userData
-        mesh.rotation.x += data.rotationSpeed.x
-        mesh.rotation.y += data.rotationSpeed.y
-        mesh.rotation.z += data.rotationSpeed.z
-
-        // Orbital motion
-        const angle = time * data.orbitSpeed + data.orbitPhase
-        const orbitX = Math.cos(angle) * data.orbitRadius
-        const orbitZ = Math.sin(angle) * data.orbitRadius
-        mesh.position.x += (orbitX - mesh.position.x) * 0.0005
-        mesh.position.z += (orbitZ - mesh.position.z) * 0.0005
-        mesh.position.y = -100 - scrollInfluence * 0.03
-      })
-
-      // Energy beams
-      beams.children.forEach((beam) => {
-        const data = beam.userData
-        data.progress += data.speed
-        if (data.progress > 1) data.progress = 0
-        beam.position.z = -200 + data.progress * 500 - scrollInfluence * 0.15
-      })
+      shapes.instanceMatrix.needsUpdate = true
 
       // Grid
-      grid.position.y = -250 - scrollInfluence * 0.04
-      ;(gridMaterial as THREE.MeshBasicMaterial).opacity = 0.015 + Math.sin(time * 0.3) * 0.005 + scrollProgress * 0.008
+      grid.position.y = -200 - scrollInfluence * 0.03
+      gridMaterial.opacity = 0.02 + scrollProgress * 0.005
 
-      // Camera follows scroll with subtle parallax
+      // Camera - minimal movement
       if (!reducedMotion) {
-        camera.position.x += (mouseX * 15 - camera.position.x) * 0.008
-        camera.position.y += (mouseY * 15 - camera.position.y) * 0.008
-        camera.position.z = 100 + scrollInfluence * 0.08
-        camera.lookAt(0, -scrollInfluence * 0.04, 0)
+        camera.position.x += (mouseX * 8 - camera.position.x) * 0.01
+        camera.position.y += (mouseY * 8 - camera.position.y) * 0.01
+        camera.position.z = 100 + scrollInfluence * 0.05
+        camera.lookAt(0, -scrollInfluence * 0.02, 0)
       }
 
       renderer.render(scene, camera)
@@ -357,27 +345,15 @@ export function GlobalBackground({ className = "" }: { className?: string }) {
       container.removeEventListener("mousemove", handleMouseMove)
       cancelAnimationFrame(animationId)
       renderer.dispose()
-      deepGeometry.dispose()
-      deepMaterial.dispose()
-      fieldGeometry.dispose()
-      fieldMaterial.dispose()
-      constellations.children.forEach((mesh) => {
-        const m = mesh as THREE.Mesh<THREE.BufferGeometry, THREE.Material>
-        m.geometry.dispose()
-        if (Array.isArray(m.material)) m.material.forEach(mat => mat.dispose())
-        else m.material.dispose()
-      })
-      beams.children.forEach((beam) => {
-        const b = beam as THREE.Mesh<THREE.BufferGeometry, THREE.Material>
-        b.geometry.dispose()
-        if (Array.isArray(b.material)) b.material.forEach(mat => mat.dispose())
-        else b.material.dispose()
-      })
+      geometry.dispose()
+      material.dispose()
+      lineGeometry.dispose()
+      lineMaterial.dispose()
       gridGeometry.dispose()
       gridMaterial.dispose()
       container.removeChild(renderer.domElement)
     }
-  }, [reducedMotion, scrollY])
+  }, [reducedMotion])
 
   if (!mounted) {
     return <div className={className} ref={mountRef} style={{ width: "100%", height: "100%" }} />
